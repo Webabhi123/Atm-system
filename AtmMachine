@@ -1,0 +1,292 @@
+using System;
+using System.Collections.Generic;
+using System.Data.SqlTypes;
+using System.Linq;
+using System.Security.Principal;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace practice
+{
+    class BankAccount
+    {
+        public string Accountholder { get; set; }
+        public int AccountNumber { get; set; }
+        public decimal Balance;
+        //public decimal LastWithdrawalAmount { get; set; }
+       
+
+
+
+        public decimal Deposit(decimal amount)
+        {
+            if (amount > 0)
+            {
+                Balance += amount;
+                return Balance;
+            }
+            else
+            {
+                return Balance;
+            }
+        }
+        public decimal withdrawal(decimal amount)
+        {
+            if (amount > 0 && Balance>=0)
+            {
+                Balance -= amount;
+                
+                //LastWithdrawalAmount = Balance;
+                return Balance;
+            }
+            else
+            {
+                return Balance;
+            }
+        }
+        //public decimal transfer(decimal amount)
+        //{
+        //    if (amount > 0 && Balance >= 0)
+        //    {
+        //        Balance -= amount;
+        //        LastWithdrawalAmount=Balance;
+        //        return Balance;
+        //    }
+        //    else
+        //    {
+        //        return Balance;
+        //    }
+        //}
+        public void Transfer(BankAccount targetaccount,decimal amount)
+        {
+            if(this.Balance >=amount && amount > 0)
+            {
+                this.Balance -= amount;
+                targetaccount.Balance += amount;
+                Console.WriteLine("transfer successful.new balance:-{0}:{1}",this.Accountholder,this.Balance);
+                Console.WriteLine("new balance for:-{0}:{1}",targetaccount.Accountholder,targetaccount.Balance);
+            }
+            else
+            {
+                Console.WriteLine("transfer failed");
+            }
+        }
+        }
+        
+
+
+    
+
+    class Program
+    {
+        static List<BankAccount> accounts = new List<BankAccount>();
+        static void Main(string[] args)
+        {
+            while(true){ 
+            abhi:
+            Console.WriteLine("Choose an action to perfome!");
+            Console.WriteLine("1)Create an account");
+            Console.WriteLine("2)Enter an Account");
+            
+            Console.WriteLine("3)Exit");
+            
+
+           
+           
+            int selection = Convert.ToInt32(Console.ReadLine());
+                if (selection == 3)
+                {
+                    Console.WriteLine("Exit");
+                    break;
+                    
+                }
+                
+                {
+                    switch (selection)
+                    {
+                        case 1:
+                            Console.WriteLine("Which account do you want to open:- 1)Curent account.2)Saving account");
+                            int accounttype = Convert.ToInt32(Console.ReadLine());
+                            
+
+                            BankAccount newaccount = new BankAccount();
+                            if (accounttype == 1)
+                            {
+                                Console.WriteLine("Enter Your Name");
+                                newaccount.Accountholder = Console.ReadLine();
+                                Console.WriteLine("Your Accountholdername:{0}", newaccount.Accountholder);
+                                Console.WriteLine("Enter your account number");
+                                newaccount.AccountNumber = Convert.ToInt32(Console.ReadLine()); ;
+                                Console.WriteLine("Your account number{0}", newaccount.AccountNumber);
+                                //Console.WriteLine("Add money in your account");
+                                newaccount.Balance = 100;
+                                Console.WriteLine("Your current balance:{0}", newaccount.Balance);
+                                //if (decimal.TryParse(Console.ReadLine(), out decimal depositamount))
+                                //{
+                                //    decimal result = newaccount.Deposit(depositamount);
+                                //    Console.WriteLine("Your deposit amount:{0}", result);
+
+                                //}
+                                if (accounttype == 1)
+                                {
+                                    accounts.Add(newaccount);
+
+                                    Console.WriteLine("Thank You For Creating Account");
+
+
+                                }
+                                Thread.Sleep(1000);
+                                Console.Clear();
+                                goto abhi;
+                            }
+                            else if (accounttype == 2)
+                            {
+                                Console.WriteLine("Enter Your Name");
+                                newaccount.Accountholder = Console.ReadLine();
+                                Console.WriteLine("Your Accountholdername:{0}", newaccount.Accountholder);
+                                Console.WriteLine("Enter your account number");
+                                newaccount.AccountNumber = Convert.ToInt32(Console.ReadLine());
+                                Console.WriteLine("Your account number{0}", newaccount.AccountNumber);
+                                //Console.WriteLine("Add money in your account");
+                                newaccount.Balance = 100;
+                                Console.WriteLine("Your current balance:{0}", newaccount.Balance);
+                                //if (decimal.TryParse(Console.ReadLine(), out decimal depositamount))
+                                //{
+                                //    decimal result = newaccount.Deposit(depositamount);
+                                //    Console.WriteLine("Your deposit amount:{0}", result);
+
+                                //}
+                                if (accounttype == 2)
+                                {
+                                    accounts.Add(newaccount);
+
+                                    Console.WriteLine("Thank You For Creating Account");
+
+                                }
+                                Thread.Sleep(1000);
+                                Console.Clear();
+                                goto abhi;
+                            }
+                            break;
+                        case 2:
+                            Console.WriteLine("Select th account to enter:");
+                            Console.WriteLine("---List of Accountss----");
+
+                            //BankAccount newaccount1 = new BankAccount();
+
+                            foreach (var account in accounts)
+                            {
+                                Console.WriteLine("Accountholder Name:{0}", account.Accountholder);
+                            }
+                            Console.WriteLine("Please enter your account number to perform action");
+                            int selectedAccountNumber = Convert.ToInt32(Console.ReadLine());
+
+                            BankAccount selectedAccount = accounts.FirstOrDefault(acc => acc.AccountNumber == selectedAccountNumber);
+
+                            //if (selectedAccount != null)
+                            //{
+                            //    Console.WriteLine("You have entered Account Number :{0}", selectedAccount.AccountNumber);
+                            //    Console.WriteLine("Current Balance:{0}", selectedAccount.Balance);
+                            //}
+                            //else
+                            //{
+                            //    Console.WriteLine("Account Not Found!");
+                            //}
+                            if (selectedAccount !=null)
+                            {
+                               
+                                   
+                              Console.WriteLine("Accountholder Name:{0},AccountNumber {1}", selectedAccount.Accountholder, selectedAccount.AccountNumber);
+
+                                
+
+                                Console.WriteLine("Choose an action to perform!");
+                                Console.WriteLine("deposit");
+                                Console.WriteLine("Withdrawal");
+                                Console.WriteLine("Pin Change");
+                                Console.WriteLine("Money transfer");
+
+
+                                int action = Convert.ToInt32(Console.ReadLine());
+                                switch (action)
+                                {
+                                    case 1:
+                                            
+                                            Console.WriteLine("Current Balance:{0}", selectedAccount.Balance);
+                                            Console.WriteLine("Add money into your BankAccount");
+                                            if (decimal.TryParse(Console.ReadLine(), out decimal depositamount))
+                                            {
+                                            
+                                                decimal result = selectedAccount.Deposit(depositamount);
+                                                Console.WriteLine("Your deposit amount:{0}", result);
+
+                                            
+
+                                            }
+                                        
+                                    break;
+                                    case 2:
+                                        
+                                            Console.WriteLine("Current Balance:{0}", selectedAccount.Balance);
+                                            Console.WriteLine("Withdrawal money into your BankAccount");
+                                            if (decimal.TryParse(Console.ReadLine(), out decimal withdrawamount))
+                                            {
+                                                decimal result = selectedAccount.withdrawal(withdrawamount);
+                                                Console.WriteLine("Your current balance:{0}", result);
+
+                                            
+                                        }
+                                        break;
+                                    case 3:
+                                        Console.WriteLine("Add number to create Pin");
+                                        int create = Convert.ToInt32(Console.ReadLine());
+                                        Console.WriteLine("Your Pin Number is:{0}", create);
+
+                                        break;
+                                    case 4:
+                                        Console.WriteLine("Enter the receipent accountnumber to Transfer");
+                                        //int transfer= Convert.ToInt32(Console.ReadLine());
+                                        int recipientAccountNumber = Convert.ToInt32(Console.ReadLine());
+                                        BankAccount recipientAccount = accounts.FirstOrDefault(acc => acc.AccountNumber == recipientAccountNumber);
+
+                                        if (recipientAccount != null)
+                                        {
+                                            
+                                                Console.WriteLine("Enter the amount to transfer");
+                                                if (decimal.TryParse(Console.ReadLine(), out decimal transferAmount))
+                                                {
+                                                selectedAccount.Transfer(recipientAccount,transferAmount);
+                                                //decimal result = selectedAccount.Transfer(LastWithdrawal);
+                                                //Console.WriteLine("Transfer success!");
+                                                //Console.WriteLine("Your current balance:{0}", selectedAccount.Balance);
+
+
+
+                                            }
+                                            else
+                                            {
+                                                Console.WriteLine("invalid amount.");
+                                            }
+                                        }
+                                        else
+                                        {
+                                            Console.WriteLine("AccountNumber is wrong!Please Check again");
+                                        }
+
+                                        break;
+                                }
+
+                            }
+
+                            break;
+                    }
+                }
+                    
+
+            Console.ReadLine();
+
+        }
+        }
+    }
+}
